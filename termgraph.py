@@ -5,6 +5,7 @@ import sys
 from termcolor import colored, cprint
 import readchar
 
+#prints canvas
 def printcan(canvas):
 	for y in canvas:
 		for x in y:
@@ -23,6 +24,9 @@ def canvas(width, height, charfill):
 
 
 
+#init and some settings
+system("cd ~")
+system("mkdir py")
 system("cd ~/py")
 maxworldwidth = 30
 worldindex = 0
@@ -65,8 +69,14 @@ gchar_x = 0
 gchar_y = 0
 curloc = [gchar_x, gchar_y]
 prevloc = [gchar_x - 1, gchar_y - 1]
-redraw = input("do you want cool graphic visuals? (y/n) :")
 gravity = True
+#\intit
+
+#settings
+redraw = input("do you want cool graphic visuals? (y/n) :")
+#\settings
+
+#main loop obveiously 
 while True:
 	if charact == "d":
 		prevloc = [gchar_x, gchar_y]
@@ -208,6 +218,7 @@ while True:
 				pass		
 			else:
 				gchar_y -= 1
+				
 
 
 	#drop is enabled
@@ -250,7 +261,7 @@ while True:
 			thingloc[worldindex].append([gchar_x, gchar_y, charlook])
 
 	whatprints[worldindex] = canvas(canvaswidth, canvasheight, charfill)
-#places stuff onto the world
+#place objects for graphics charicter by charicter 
 	for s in thingloc[worldindex]:
 		if len(s) == 4:
 			whatprints[worldindex][s[1]][s[0]] = colored(s[2], s[3])
@@ -286,7 +297,7 @@ while True:
 		iswrong = False
 	charact = print("(type 'man' for manual)action? ")
 	charact = readchar.readchar()
-	
+#\main loop
 
 
 

@@ -3,22 +3,9 @@ from time import sleep
 
 import sys
 from termcolor import colored, cprint
+import readchar
 
-system("python3 ~/py/termgraph.p")
-ccl = [1,1]
-charact = False
-iswrong = False
-drop = False
-charlook = "♿︎"
-charlook = colored(charlook, 'red', attrs=[ 'reverse', 'blink'])
-thingloc = []
-charfill = "▵▵"
-CanGoThru = []
-CanGoThru.append(charfill)
-gothruwalls = False
-goback = False
-manual = False
-
+	#prints canvas
 def printcan(canvas):
 	for y in canvas:
 		for x in y:
@@ -35,25 +22,96 @@ def canvas(width, height, charfill):
         canvas.append(row)
     return canvas
 
+#init and some settings
+system("cd ~")
+system("mkdir py")
+system("cd ~/py")
+maxworldwidth = 30
+worldindex = 0
+ccl = [1,1]
+charact = False
+iswrong = False
+drop = False
+defcharlook = "🁢"
+charlook = defcharlook
+charlook = colored(charlook, attrs=['blink'])
+thingloc = [[]]
+charfill = " "
+canvaswidth = maxworldwidth
+canvasheight = 6
+whatprints = [canvas(canvaswidth, canvasheight, charfill)]
+CanGoThru = []
+CanGoThru.append(charfill)
+gothruwalls = False
+goback = False
+manual = False
+highlightcolor = False
+worldheight = 3
+howfarx = 0
+for x in whatprints[0][worldheight]:
+	thingloc[worldindex].append([howfarx, worldheight, "_", "green"])
+	howfarx += 1
+howfarx = 0
+howfary = 0
+for y in whatprints[0]:
+	if howfary > worldheight:
+		for x in whatprints[0][worldheight]:
+			thingloc[worldindex].append([howfarx, howfary, "D", "green"])
+			howfarx += 1
+		howfarx = 0
+	howfary += 1
+howfary = 0
 
-whatprints = canvas(10, 10, charfill)
-gchar_x = 4
-gchar_y = 4
+gchar_x = 0
+gchar_y = 0
 curloc = [gchar_x, gchar_y]
 prevloc = [gchar_x - 1, gchar_y - 1]
+#\intit
 
+#settings
+redraw = input("do you want cool graphic visuals? (y/n) :")
+#\settings
+#main loop obveiously 
 while True:
-	print(prevloc, 5)
 	if charact == "d":
 		prevloc = [gchar_x, gchar_y]
 		gchar_x = gchar_x + 1
-		if gchar_x == len(whatprints[0]):
+	#if past right edge
+		if gchar_x == len(whatprints[worldindex][0]):
 			gchar_x = gchar_x - 1
 			iswrong = True
+			if len(whatprints[worldindex]) < gchar_y + 1:
+					whatprints[worldindex] = canvas(canvaswidth, gchar_y + 1, charfill)
+			if canvaswidth != maxworldwidth:
+				canvaswidth += 1
+	#\
+		#for adding new world
+			if canvaswidth == maxworldwidth and gchar_x + 1 == maxworldwidth:
+				gchar_x = 0
+				worldindex += 1
+				if worldindex + 1 > len(whatprints):
+					whatprints.append(canvas(canvaswidth, canvasheight, charfill))
+					thingloc.append([])
+					for x in whatprints[0][worldheight]:
+						thingloc[worldindex].append([howfarx, worldheight, "_", "green"])
+						howfarx += 1
+					howfarx = 0
+					howfary = 0
+					for y in whatprints[0]:
+						if howfary > worldheight:
+							for x in whatprints[0][worldheight]:
+								thingloc[worldindex].append([howfarx, howfary, "D", "green"])
+								howfarx += 1
+							howfarx = 0
+						howfary += 1
+					howfary = 0
+
+			for stuff in whatprints[worldindex]:
+				stuff.append(charfill)
 		for c in CanGoThru:
-			if whatprints[gchar_y][gchar_x] == c:
+			if whatprints[worldindex][gchar_y][gchar_x] == c:
 					passablecharisthere = True
-			if whatprints[gchar_y][gchar_x] != c:
+			if whatprints[worldindex][gchar_y][gchar_x] != c:
 				if gothruwalls == False:
 					if drop == False:
 						if iswrong == False:
@@ -73,11 +131,16 @@ while True:
 		gchar_x = gchar_x - 1
 		if gchar_x == -1:
 			gchar_x = gchar_x + 1
+			if worldindex != 0:
+				worldindex -= 1
+				gchar_x = len(whatprints[worldindex][0]) - 1
+				if len(whatprints[worldindex]) < gchar_y + 1:
+					whatprints[worldindex] = canvas(canvaswidth, gchar_y + 1, charfill)
 			iswrong = True
 		for c in CanGoThru:
-			if whatprints[gchar_y][gchar_x] == c:
+			if whatprints[worldindex][gchar_y][gchar_x] == c:
 				passablecharisthere = True			
-			if whatprints[gchar_y][gchar_x] != c:
+			if whatprints[worldindex][gchar_y][gchar_x] != c:
 				if gothruwalls == False:
 					if drop == False:
 						if iswrong == False:
@@ -98,9 +161,9 @@ while True:
 			gchar_y = gchar_y + 1
 			iswrong = True
 		for c in CanGoThru:
-			if whatprints[gchar_y][gchar_x] == c:
+			if whatprints[worldindex][gchar_y][gchar_x] == c:
 				passablecharisthere = True			
-			if whatprints[gchar_y][gchar_x] != c:
+			if whatprints[worldindex][gchar_y][gchar_x] != c:
 				if gothruwalls == False:
 					if drop == False:
 						if iswrong == False:
@@ -118,13 +181,18 @@ while True:
 	if charact == "s":
 		prevloc = [gchar_x, gchar_y]
 		gchar_y = gchar_y + 1
-		if gchar_y == len(whatprints):
+		if gchar_y == len(whatprints[worldindex]):
 			gchar_y = gchar_y - 1
 			iswrong = True
+			canvasheight += 1
+			for x in whatprints[0][worldheight]:
+				thingloc[worldindex].append([howfarx, gchar_y + 1, "#", "green"])
+				howfarx += 1
+			howfarx = 0
 		for c in CanGoThru:
-			if whatprints[gchar_y][gchar_x] == c:
+			if whatprints[worldindex][gchar_y][gchar_x] == c:
 					passablecharisthere = True			
-			if whatprints[gchar_y][gchar_x] != c:
+			if whatprints[worldindex][gchar_y][gchar_x] != c:
 				if gothruwalls == False:
 					if drop == False:
 						if iswrong == False:
@@ -142,45 +210,65 @@ while True:
 	if charact == "P":
 		if drop == False:
 			drop = True
-		charlook = charlook = colored(input("which char: "), 'red', attrs=[ 'reverse', 'blink'])
+		hilightcheck = input("do you want it to be highlighted?")
+		if hilightcheck == "y":
+			highlightcolor = input("which color (grey, red, green, yellow, blue, magenta, cyan, white)")
+			charlook = colored(input("which char: "), highlightcolor)
+		else:
+			charlook = input("which char: ")
 	#drop is disabled
 	if charact == "p":
 		if drop == True:
 			drop = False
-		charlook = "Ω"
+		charlook = colored(defcharlook, attrs=['blink'])
 
 	if charact == "G":
 		gothruwalls = True
 	if charact == "g":
 		gothruwalls = False
 
-	if charact == "can":
+	if charact == "c":
 		gothruinput = input("which char should you be able to go through: ")
 		CanGoThru.append(gothruinput)
 
-	if charact == "man":
+	if charact == "m":
 		manual = True
+	if charact == "next world":
+		worldindex += 1
 
 	if drop == True:
-		thingloc.append([gchar_x, gchar_y, charlook])
+		if hilightcheck == "y":
+			thingloc[worldindex].append([gchar_x, gchar_y, charlook, highlightcolor])
+		else:
+			thingloc[worldindex].append([gchar_x, gchar_y, charlook])
 
-	whatprints = canvas(10, 10, charfill)
+	whatprints[worldindex] = canvas(canvaswidth, canvasheight, charfill)
 
+	for s in thingloc[worldindex]:
+		if len(s) == 4:
+			whatprints[worldindex][s[1]][s[0]] = colored(s[2], s[3])
+		if len(s) == 3:
+			whatprints[worldindex][s[1]][s[0]] = s[2]
+		whatprints[worldindex][gchar_y][gchar_x] = charlook
+		if redraw == "y":
+			system("clear")
+			print("")
+			print(" worldindex: ", worldindex)
+			print("char psition: ",gchar_x, gchar_y)
+			printcan(whatprints[worldindex])
+			sleeplen = .1 / len(thingloc[worldindex])
+	whatprints[worldindex][gchar_y][gchar_x] = colored(charlook, attrs=['blink'])
 
-	for s in thingloc:
-		whatprints[s[1]][s[0]] = s[2]
-		printcan(whatprints)
-	
-	whatprints[gchar_y][gchar_x] = charlook
 
 	system("clear")
 	print("")
-	print(charlook)
-	print("  ",gchar_x, gchar_y)
-	printcan(whatprints)
+	print(" worldindex: ", worldindex)
+	print("char position: ",gchar_x, gchar_y)
+	printcan(whatprints[worldindex])
 	if manual == True:
 		print("wasd for moving")
-		print("P for placing specified char as you move")
+		print("go to the bottom of the map to make it bigger and the right most side to explore more of the map")
+		print("P for placing specified char with specified color as you move")
 		print("p to dissable specified char as you move")
 		print("G to go through walls")
 		print("g to dissable going through walls")
@@ -188,24 +276,7 @@ while True:
 		manual = False
 
 	if iswrong == True:
-		print("can't do that.")
 		iswrong = False
-	charact = input("(type 'man' for manual)action? ")
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	charact = print("(type 'man' for manual)action? ")
+	charact = readchar.readchar()
+#\main loop
