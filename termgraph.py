@@ -211,6 +211,9 @@ while True:
 			gchar_y = gchar_y - 1
 			goback = False
 
+	if charact == "l":
+			whatprints = eval(open("worlds.cum").read())
+
 	if gravity == True:
 		gchar_y += 1
 		for c in CanGoThru:
