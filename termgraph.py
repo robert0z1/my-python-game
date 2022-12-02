@@ -211,8 +211,8 @@ while True:
 			gchar_y = gchar_y - 1
 			goback = False
 
-	if charact == "l":
-			whatprints = eval(open("worlds.cum").read())
+#	if charact == "l":
+#			whatprints = eval(open("~/py/worlds.cum").write("fuck"))
 
 	if gravity == True:
 		gchar_y += 1
