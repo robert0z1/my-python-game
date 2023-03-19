@@ -1,0 +1,115 @@
+from random import randint
+
+#you have 3 boxes to choose from one of them is going to dissapear
+#if you choose the box that dissapears you loose
+#a box will dissapear twice
+lostfirst = 0
+changingitworked = 0
+changingitdidntwork = 0
+mainloopamount = 1000000
+while mainloopamount > 0:
+	mainloopamount -= 1
+	youlostfirstround = False
+	youlostsecondround = False
+	youwon = False
+	box1 = True
+	box2 = True
+	box3 = True
+
+	boxchoice = randint(1, 3)
+	dissapearboxchoise = randint(1, 3)
+
+	if dissapearboxchoise == 1:
+		box1 = False
+	if dissapearboxchoise == 2:
+		box2 = False
+	if dissapearboxchoise == 3:
+		box3 = False
+
+
+#if the box randint choose dissapeared then you loose and it starts over
+	if boxchoice == 1:
+		if box1 == False:
+			youlostfirstround = True
+	elif boxchoice == 2 and box2 == False:
+		youlostfirstround = True
+	elif boxchoice == 3 and box3 == False:
+		youlostfirstround = True
+
+		if youlostfirstround == True:
+			lostfirst += 1
+
+#if you didnt loose already
+	if youlostfirstround == False:
+
+#change your choice 
+		if box1 == False and boxchoice == 2:
+			boxchoice = 3
+		if box1 == False and boxchoice == 3:
+			boxchoice = 2
+
+		if box2 == False and boxchoice == 1:
+			boxchoice = 3
+		if box2 == False and boxchoice == 3:
+			boxchoice = 1
+
+		if box3 == False and boxchoice == 1:
+			boxchoice = 2
+		if box3 == False and boxchoice == 2:
+			boxchoice = 1
+
+#another box dissapears, notice how its a 50 percent chance here
+		dissapearboxchoise == randint(1, 2)
+#this one is a hard one to explain lets say box 2 is already gone than there would be two choices left box1 and box3 either box1 dissapears or box3 depending on what randint says
+		if box1 == False:
+			if dissapearboxchoise == 1:
+				box2 = False
+			if dissapearboxchoise == 2:
+				box3 = False
+		elif box2 == False:
+			if dissapearboxchoise == 1:
+				box1 = False
+			if dissapearboxchoise == 2:
+				box3 = False
+		elif box3 == False:
+			if dissapearboxchoise == 1:
+				box1 = False
+			if dissapearboxchoise == 2:
+				box2 = False
+#checks to see if you chose the wrong box the second time
+		if boxchoice == 1 and box1 == False:
+			youlostsecondround = True
+		if boxchoice == 2 and box2 == False:
+			youlostsecondround = True
+		if boxchoice == 3 and box3 == False:
+			youlostsecondround = True
+		else:
+			youwon = True
+			changingitworked += 1
+		if youlostsecondround == True:
+			changingitdidntwork += 1
+	#print("you lost your first round: " + str(youlostfirstround))
+	#print("you lost your second round: " + str(youlostsecondround))
+	#print("you won: " + str(youwon))
+math1 = changingitworked + changingitdidntwork
+math2 = changingitworked / math1
+
+math3 = changingitworked + changingitdidntwork + lostfirst
+math4 = changingitworked / math3
+
+math5 = changingitdidntwork / math3
+
+math6 = lostfirst / math3
+print("percent of the time you lost first round: " + str(math5 * 100))
+print("percent of the time you won by not changing it: " + str(math5 * 100))
+print("pecent of the time you won by changing it: " + str(math4 * 100))
+print("percent of the time changing it worked: " + str(math2 * 100))
+print("changing it worked: " + str(changingitworked))
+print("changing it didnt work: " + str(changingitdidntwork))
+
+
+
+
+
+
+
