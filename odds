@@ -1,96 +1,99 @@
 from random import randint
 
-#you have 3 boxes to choose from one of them is going to dissapear
-#if you choose the box that dissapears you loose
-#a box will dissapear twice
-lostfirst = 0
-changingitworked = 0
-changingitdidntwork = 0
-mainloopamount = 1000000
-while mainloopamount > 0:
-	mainloopamount -= 1
-	youlostfirstround = False
-	youlostsecondround = False
-	youwon = False
-	box1 = True
-	box2 = True
-	box3 = True
+# You have 3 boxes to choose from. One of them is going to disappear.
+# If you choose the box that disappears, you lose.
+# A box will disappear twice.
 
-	boxchoice = randint(1, 3)
-	dissapearboxchoise = randint(1, 3)
+lost_first_round = 0
+changing_it_worked = 0
+changing_it_didnt_work = 0
+main_loop_amount = 1000000
 
-	if dissapearboxchoise == 1:
-		box1 = False
-	if dissapearboxchoise == 2:
-		box2 = False
-	if dissapearboxchoise == 3:
-		box3 = False
+while main_loop_amount > 0:
+    main_loop_amount -= 1
+    you_lost_first_round = False
+    you_lost_second_round = False
+    you_won = False
+    first_box = True
+    second_box = True
+    third_box = True
 
+    box_choice = randint(1, 3)
+    disappear_box_choice = randint(1, 3)
 
-#if the box randint choose dissapeared then you loose and it starts over
-	if boxchoice == 1:
-		if box1 == False:
-			youlostfirstround = True
-	elif boxchoice == 2 and box2 == False:
-		youlostfirstround = True
-	elif boxchoice == 3 and box3 == False:
-		youlostfirstround = True
+    if disappear_box_choice == 1:
+        first_box = False
+    elif disappear_box_choice == 2:
+        second_box = False
+    else:
+        third_box = False
 
-		if youlostfirstround == True:
-			lostfirst += 1
+    # If the box 'randint' chose disappeared then you lose and it starts over
+    if box_choice == 1:
+        if first_box == False:
+            you_lost_first_round = True
+    elif box_choice == 2 and second_box == False:
+        you_lost_first_round = True
+    elif box_choice == 3 and third_box == False:
+        you_lost_first_round = True
 
-#if you didnt loose already
-	if youlostfirstround == False:
+    if you_lost_first_round == True:
+        lost_first_round += 1
 
-#change your choice 
-		if box1 == False and boxchoice == 2:
-			boxchoice = 3
-		if box1 == False and boxchoice == 3:
-			boxchoice = 2
+    # If you didn't lose already
+    if you_lost_first_round == False:
+        # Change your choice
+        if first_box == False and box_choice == 2:
+            box_choice = 3
+        elif first_box == False and box_choice == 3:
+            box_choice = 2
+        elif second_box == False and box_choice == 1:
+            box_choice = 3
+        elif second_box == False and box_choice == 3:
+            box_choice = 1
+        elif third_box == False and box_choice == 1:
+            box_choice = 2
+        elif third_box == False and box_choice == 2:
+            box_choice = 1
 
-		if box2 == False and boxchoice == 1:
-			boxchoice = 3
-		if box2 == False and boxchoice == 3:
-			boxchoice = 1
+        # Another box disappears, notice how it's a 50 percent chance here
+        disappear_box_choice = randint(1, 2)
+        
+        # This one is a hard one to explain. Let's say box 2 is already gone than there would be two choices left:
+        # box1 and box3. Either box1 disappears or box3 depending on what 'randint' says.
+        if first_box == False:
+            if disappear_box_choice == 1:
+                second_box = False
+            else:
+                third_box = False
+        elif second_box == False:
+            if disappear_box_choice == 1:
+                first_box = False
+            else:
+                third_box = False
+        elif third_box == False:
+            if disappear_box_choice == 1:
+                first_box = False
+            else:
+                second_box = False
 
-		if box3 == False and boxchoice == 1:
-			boxchoice = 2
-		if box3 == False and boxchoice == 2:
-			boxchoice = 1
+        # Checks to see if you chose the wrong box the second time
+        if box_choice == 1 and first_box == False:
+            you_lost_second_round = True
+        elif box_choice == 2 and second_box == False:
+            you_lost_second_round = True
+        elif box_choice == 3 and third_box == False:
+            you_lost_second_round = True
+        else:
+            you_won = True
+            changing_it_worked += 1
 
-#another box dissapears, notice how its a 50 percent chance here
-		dissapearboxchoise == randint(1, 2)
-#this one is a hard one to explain lets say box 2 is already gone than there would be two choices left box1 and box3 either box1 dissapears or box3 depending on what randint says
-		if box1 == False:
-			if dissapearboxchoise == 1:
-				box2 = False
-			if dissapearboxchoise == 2:
-				box3 = False
-		elif box2 == False:
-			if dissapearboxchoise == 1:
-				box1 = False
-			if dissapearboxchoise == 2:
-				box3 = False
-		elif box3 == False:
-			if dissapearboxchoise == 1:
-				box1 = False
-			if dissapearboxchoise == 2:
-				box2 = False
-#checks to see if you chose the wrong box the second time
-		if boxchoice == 1 and box1 == False:
-			youlostsecondround = True
-		if boxchoice == 2 and box2 == False:
-			youlostsecondround = True
-		if boxchoice == 3 and box3 == False:
-			youlostsecondround = True
-		else:
-			youwon = True
-			changingitworked += 1
-		if youlostsecondround == True:
-			changingitdidntwork += 1
-	#print("you lost your first round: " + str(youlostfirstround))
-	#print("you lost your second round: " + str(youlostsecondround))
-	#print("you won: " + str(youwon))
+        if you_lost_second_round == True:
+            changing_it_didnt_work += 1
+
+# Print the results
+math1 = changing_it_worked + changing_it_didnt
+
 math1 = changingitworked + changingitdidntwork
 math2 = changingitworked / math1
 
